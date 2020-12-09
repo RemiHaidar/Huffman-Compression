@@ -50,6 +50,28 @@ struct GetFrequency
 		}
 	}
 
+	void SortFrequenciesAndCharacters()
+	{
+		int intTemp;
+		char charTemp;
+
+		for (int i = 0; i < frequency.size(); i++)
+		{
+			for (int j = i + 1; j < frequency.size(); j++)
+			{
+				if (frequency[i] > frequency[j])
+				{
+					intTemp = frequency[i];
+					charTemp = characters[i];
+					frequency[i] = frequency[j];
+					characters[i] = characters[j];
+					frequency[j] = intTemp;
+					characters[j] = charTemp;
+				}			
+			}
+		}
+	}
+
 	void PrintVectors()
 	{
 		for (int i = 0; i < characters.size(); i++)
@@ -73,6 +95,8 @@ int main()
 	std::cin >> text;
 
 	GetFrequency something(text);
+
+	something.SortFrequenciesAndCharacters();
 
 	something.PrintVectors();
 
