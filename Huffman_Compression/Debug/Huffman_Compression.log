@@ -1,2 +1,7 @@
 ﻿  Huffman_Compression.cpp
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(14,22): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(29,21): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(55,21): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(62,21): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(25): warning C4715: 'GetFrequency::LetterIsFound': not all control paths return a value
   Huffman_Compression.vcxproj -> D:\C++\Huffman_Compression\Debug\Huffman_Compression.exe
