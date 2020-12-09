@@ -1,72 +1,55 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
-struct GetFrequency
+struct GetCharacterFrequency
 {
-	std::vector<char> characters;
-	std::vector<int> frequency;
+	std::vector<std::pair<char, int>> characterFrequency;
 
-	bool LetterIsFound(std::vector<char> x, char y)
+	bool LetterIsFound(std::vector<std::pair<char, int>> x, char y)
 	{
-		if (!x.empty())
+		for (auto i : x)
 		{
-			for (int i = 0; i < x.size(); i++)
-			{
-				if (x[i] == y)
-				{
-					return true;
-				}
-			}
-
-			return false;
+			if (i.first == y)
+				return true;
 		}
-			
+		return false;	
 	}
 
 	void AddToCharacterFrequency(char a)
 	{
-		for (int i = 0; i < characters.size(); i++)
+		for (auto &i : characterFrequency)
 		{
-			if (characters[i] == a)
-			{
-				frequency[i]++;
-			}
+			if (i.first == a)
+				i.second++;
 		}
 	}
 
-	GetFrequency(std::string word)
+	GetCharacterFrequency(std::string word)
 	{
 		for (int i = 0; word[i] != '\0'; i++)
 		{
-			if (LetterIsFound(characters, word[i]))
-			{
+			if (LetterIsFound(characterFrequency, word[i]))
 				AddToCharacterFrequency(word[i]);
-			}
-			else {
-				characters.push_back(word[i]);
-				frequency.push_back(1);
-			}
+			else
+				characterFrequency.push_back(std::make_pair(word[i], 1));
 		}
 	}
+
 
 	void SortFrequenciesAndCharacters()
 	{
 		int intTemp;
-		char charTemp;
-
-		for (int i = 0; i < frequency.size(); i++)
+		for (int i = 0; i < characterFrequency.size(); i++)
 		{
-			for (int j = i + 1; j < frequency.size(); j++)
+			for (int j = i + 1; j < characterFrequency.size(); j++)
 			{
-				if (frequency[i] > frequency[j])
+				if (characterFrequency[i].second > characterFrequency[j].second)
 				{
-					intTemp = frequency[i];
-					charTemp = characters[i];
-					frequency[i] = frequency[j];
-					characters[i] = characters[j];
-					frequency[j] = intTemp;
-					characters[j] = charTemp;
+					intTemp = characterFrequency[i].second;
+					characterFrequency[i].second = characterFrequency[j].second;
+					characterFrequency[j].second = intTemp;
 				}			
 			}
 		}
@@ -74,19 +57,20 @@ struct GetFrequency
 
 	void PrintVectors()
 	{
-		for (int i = 0; i < characters.size(); i++)
-		{
-			std::cout << characters[i] << "\t";
-		}
-
+		for (auto i : characterFrequency)
+			std::cout << i.first << "-" << i.second << "\t";
 		std::cout << std::endl;
-
-		for (int i = 0; i < frequency.size(); i++)
-		{
-			std::cout << frequency[i] << "\t";
-		}
 	}
 };
+
+/*
+struct CreateTree
+{
+	CreateTree(std::vector<char> a, std::vector<int> b)
+	{
+		while ()
+	}
+};*/
 
 int main()
 {
@@ -94,9 +78,9 @@ int main()
 
 	std::cin >> text;
 
-	GetFrequency something(text);
+	GetCharacterFrequency something(text);
 
-	something.SortFrequenciesAndCharacters();
+	//something.SortFrequenciesAndCharacters();
 
 	something.PrintVectors();
 
