@@ -38,18 +38,19 @@ struct GetCharacterFrequency
 	}
 
 
-	void SortFrequenciesAndCharacters()
+	void SortCharacterFrequencies()
 	{
-		int intTemp;
+		std::pair<char,int> x;
+
 		for (int i = 0; i < characterFrequency.size(); i++)
 		{
 			for (int j = i + 1; j < characterFrequency.size(); j++)
 			{
 				if (characterFrequency[i].second > characterFrequency[j].second)
 				{
-					intTemp = characterFrequency[i].second;
-					characterFrequency[i].second = characterFrequency[j].second;
-					characterFrequency[j].second = intTemp;
+					x = characterFrequency[i];
+					characterFrequency[i] = characterFrequency[j];
+					characterFrequency[j] = x;
 				}			
 			}
 		}
@@ -63,24 +64,54 @@ struct GetCharacterFrequency
 	}
 };
 
-/*
-struct CreateTree
+
+struct Node
 {
-	CreateTree(std::vector<char> a, std::vector<int> b)
+	std::pair<char, int> value;
+	Node* left = NULL;
+	Node* right = NULL;
+
+	Node(std::pair<char, int> data)
 	{
-		while ()
+		value = data;
 	}
-};*/
+
+	void insert(std::pair<char, int> a)
+	{
+		if (a.second < value.second)
+		{
+			if (left != NULL)
+			{
+				insert(a);
+			}
+			else
+			{
+				left = &Node(a);
+			}
+		}
+		else
+		{
+			if (right != NULL)
+			{
+				insert(a);
+			}
+			else
+			{
+				right = &Node(a);
+			}
+		}
+	}
+};
 
 int main()
 {
 	std::string text;
 
-	std::cin >> text;
+	std::getline(std::cin, text);
 
 	GetCharacterFrequency something(text);
 
-	//something.SortFrequenciesAndCharacters();
+	something.SortCharacterFrequencies();
 
 	something.PrintVectors();
 
