@@ -2,118 +2,174 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <set>
+
+std::vector<std::pair<char, int>> characterFrequency;
 
 struct GetCharacterFrequency
 {
-	std::vector<std::pair<char, int>> characterFrequency;
-
+private:
+	// Checks if letter is already found in vector
 	bool LetterIsFound(std::vector<std::pair<char, int>> x, char y)
 	{
-		for (auto i : x)
-		{
+		for (auto i : x) {
 			if (i.first == y)
 				return true;
 		}
-		return false;	
+		return false;
 	}
+	//
 
+	// Adds to character frequency if letter is already found
 	void AddToCharacterFrequency(char a)
 	{
-		for (auto &i : characterFrequency)
+		for (auto& i : characterFrequency)
 		{
 			if (i.first == a)
 				i.second++;
 		}
 	}
-
-	GetCharacterFrequency(std::string word)
+	//
+public:
+	void main(std::string word)
 	{
+		// Find characters and their frequencies
 		for (int i = 0; word[i] != '\0'; i++)
 		{
 			if (LetterIsFound(characterFrequency, word[i]))
-				AddToCharacterFrequency(word[i]);
-			else
-				characterFrequency.push_back(std::make_pair(word[i], 1));
-		}
-	}
-
-
-	void SortCharacterFrequencies()
-	{
-		std::pair<char,int> x;
-
-		for (int i = 0; i < characterFrequency.size(); i++)
-		{
-			for (int j = i + 1; j < characterFrequency.size(); j++)
 			{
-				if (characterFrequency[i].second > characterFrequency[j].second)
-				{
-					x = characterFrequency[i];
-					characterFrequency[i] = characterFrequency[j];
-					characterFrequency[j] = x;
-				}			
+				AddToCharacterFrequency(word[i]);
+			}
+			else
+			{
+				characterFrequency.push_back(std::make_pair(word[i], 1));
 			}
 		}
-	}
-
-	void PrintVectors()
-	{
+		//
+		// Prints vector of pairs
 		for (auto i : characterFrequency)
 			std::cout << i.first << "-" << i.second << "\t";
 		std::cout << std::endl;
+		//
 	}
 };
+//
 
 
 struct Node
 {
-	std::pair<char, int> value;
-	Node* left = NULL;
-	Node* right = NULL;
+	Node() {};
 
-	Node(std::pair<char, int> data)
+	std::vector<Node> nodes;
+	char letter;
+	int frequency;
+	Node* left;
+	Node* right;
+
+	Node(char a, int b)
 	{
-		value = data;
+		letter = a;
+		frequency = b;
+		left = NULL;
+		right = NULL;
 	}
 
-	void insert(std::pair<char, int> a)
+	void CreateNodes()
 	{
-		if (a.second < value.second)
+		for (auto i : characterFrequency)
 		{
-			if (left != NULL)
-			{
-				insert(a);
-			}
-			else
-			{
-				left = &Node(a);
-			}
+			nodes.push_back(Node(i.first, i.second));
 		}
-		else
+	}
+
+	/*void PrintNodes()
+	{
+		for (int i = nodes.size() - 1; i >= 0; i--)
 		{
-			if (right != NULL)
+			std::cout << nodes[i].letter << "-" << nodes[i].frequency << "\t";
+		}
+	}*/
+
+	friend bool operator > (Node a, Node b)
+	{
+		return a.frequency > b.frequency;
+	}
+
+	void SortNodes()
+	{
+		Node temp;
+
+		for (int i = 0; i < nodes.size(); i++)
+		{
+			for (int j = i + 1; j < nodes.size(); j++)
 			{
-				insert(a);
-			}
-			else
-			{
-				right = &Node(a);
+				if (!(nodes[i] > nodes[j]))
+				{
+					temp = nodes[i];
+					nodes[i] = nodes[j];
+					nodes[j] = temp;
+				}
 			}
 		}
 	}
 };
 
+
+
+struct Tree : Node
+{
+	std::vector<Node> temp;
+
+	
+	std::string code;
+
+	void createParentNode(Node& a, Node& b)
+	{
+		int parentFrequency = 0;
+		Node parent;
+
+		*parent.left = a;
+		*parent.right = b;
+		parent.frequency = a.frequency + b.frequency;
+		parent.letter = '$';
+
+		nodes.pop_back();
+		nodes.pop_back();
+
+		nodes.push_back(parent);
+	}
+
+	void createTree()
+	{
+		while (nodes.size() > 0)
+		{
+			SortNodes();
+			createParentNode(nodes[0], nodes[1]);
+		}
+	}
+
+	void PrintCode()
+	{
+		
+	}
+
+};
+
+
 int main()
 {
 	std::string text;
-
 	std::getline(std::cin, text);
 
-	GetCharacterFrequency something(text);
+	GetCharacterFrequency b;
+	b.main(text);
 
-	something.SortCharacterFrequencies();
+	Tree a;
+	a.createTree();
 
-	something.PrintVectors();
+	std::cout << a.nodes[0].frequency;
 
-	system("pause");
+	std::cin.ignore();
+
+	//ooouuuuaaaaaaaaaaiiiiiiiiiiiisssssssssssss
 }

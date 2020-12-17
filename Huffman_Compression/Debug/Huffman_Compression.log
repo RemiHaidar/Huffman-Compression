@@ -1,4 +1,4 @@
 ﻿  Huffman_Compression.cpp
-D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(45,21): warning C4018: '<': signed/unsigned mismatch
-D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(47,26): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(102,21): warning C4018: '<': signed/unsigned mismatch
+D:\C++\Huffman_Compression\Huffman_Compression\Huffman_Compression.cpp(104,26): warning C4018: '<': signed/unsigned mismatch
   Huffman_Compression.vcxproj -> D:\C++\Huffman_Compression\Debug\Huffman_Compression.exe
