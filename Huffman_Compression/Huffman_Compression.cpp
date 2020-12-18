@@ -1,51 +1,49 @@
+// Huffman compression/encoding
+
 #include <iostream>
 #include <vector>
 #include <string>
 #include <queue>
+#include <fstream>
 
+// Strings are used instead of chars so the letters can be found in the
+// Huffman tree in a more efficient way
 
-std::vector<std::pair<char, int>> characterFrequency;
+std::vector<std::pair<std::string, int>> characterFrequency;
 
 struct GetCharacterFrequency
 {
 private:
 	// Checks if letter is already found in vector
-	bool LetterIsFound(std::vector<std::pair<char, int>> x, char y)
+	bool LetterIsFound(std::vector<std::pair<std::string, int>> x, std::string y)
 	{
 		for (auto i : x) {
 			if (i.first == y) { return true; }
 		}	return false;
 	}
-	//
-
 	// Adds to character frequency if letter is already found
-	void AddToCharacterFrequency(char a)
+	void AddToCharacterFrequency(std::string a)
 	{
 		for (auto& i : characterFrequency)
 		{
 			if (i.first == a) { i.second++; }
 		}
 	}
-	//
 public:
 	void main(std::string word)
 	{
+		std::string temp;
 		// Find characters and their frequencies
 		for (int i = 0; word[i] != '\0'; i++)
 		{
-			if (LetterIsFound(characterFrequency, word[i])) { AddToCharacterFrequency(word[i]); }
-			else { characterFrequency.push_back(std::make_pair(word[i], 1)); }
+			temp = word[i];
+			if (LetterIsFound(characterFrequency, temp)) { AddToCharacterFrequency(temp); }
+			else { characterFrequency.push_back(std::make_pair(temp, 1)); }
 		}
-		//
-		// Prints vector of pairs
-		for (auto i : characterFrequency)
-			std::cout << i.first << "-" << i.second << "\t";
-		std::cout << std::endl;
-		//
 	}
 };
-//
 
+// Node object
 struct Node
 {
 	std::string letter;
@@ -53,7 +51,7 @@ struct Node
 	Node* right;
 	Node* left;
 
-	Node(char a, int b)
+	Node(std::string a, int b)
 	{
 		right = NULL;
 		left = NULL;
@@ -62,6 +60,7 @@ struct Node
 	}
 };
 
+// operator overload for priority_queue
 struct compare
 {
 	bool operator()(Node* left, Node* right)
@@ -70,8 +69,7 @@ struct compare
 	}
 };
 
-std::priority_queue < Node*, std::vector<Node*>, compare> nodes;
-
+std::priority_queue <Node*, std::vector<Node*>, compare> nodes;
 
 void CreateTree()
 {
@@ -79,60 +77,77 @@ void CreateTree()
 	Node* right;
 	Node* parent;
 
+	// Creates the nodes
 	for (auto i : characterFrequency)
-	{
 		nodes.push(new Node(i.first, i.second));
-	}
 
+	// Creates the tree
 	while (nodes.size() > 1)
 	{
 		left = nodes.top();
 		nodes.pop();
 		right = nodes.top();
 		nodes.pop();
-		parent = new Node('#', left->frequency + right->frequency);
+		parent = new Node(left->letter + right->letter, left->frequency + right->frequency);
 		parent->left = left;
 		parent->right = right;
-		parent->letter = left->letter + right->letter;
 		nodes.push(parent);
 	}
 }
 
-void GetNewCodes(Node* root, const char *letter)
+// Function that displays code of letter given in as a parameter
+void HuffmanCode(Node* root, std::string character)
 {
+	static std::vector<std::string> codes;
 	static std::string code = "";
+	std::string temp;
 
-	if (root->letter == letter)
+	// Check if letter is already found
+	if (!std::count(codes.begin(), codes.end(), character))
 	{
-		std::cout << code;
-	}
-	else
-	{
-		for (int j = 0; j < root->left->letter.size(); j++)
+		// If nodes contains letter, display code
+		if (root->letter == character)
 		{
-			if (root->left->letter[j] == *letter)
+			std::cout << character << " : " << code << std::endl;
+			codes.push_back(character);
+		}
+		else
+		{
+			// Check the left node
+			for (int j = 0; j < root->left->letter.size(); j++)
 			{
-				code = code + "0";
-				GetNewCodes(root->left, letter);
+				temp = root->left->letter[j];
+				if (temp == character)
+				{
+					code = code + "0";
+					HuffmanCode(root->left, character);
+				}
+			}
+
+			// Check the right node
+			for (int j = 0; root->right->letter[j] != '\0'; j++)
+			{
+				temp = root->right->letter[j];
+				if (temp == character)
+				{
+					code = code + "1";
+					HuffmanCode(root->right, character);
+				}
 			}
 		}
-
-		for (int j = 0; root->right->letter[j] != '\0'; j++)
-		{
-			if (root->right->letter[j] == *letter)
-			{
-				code = code + "1";
-				GetNewCodes(root->right, letter);
-			}
-		}
 	}
+
+	code.clear();
 }
 
-void HuffmanCodes(const char* text)
+// Main function
+void GetNewCodes(std::string text)
 {
+	std::string temp;
 	for (int i = 0; text[i] != '\0'; i++)
 	{
-		GetNewCodes(nodes.top(), &text[i]);
+		temp = text[i];
+		HuffmanCode(nodes.top(), temp);
 	}
 }
 
@@ -142,20 +157,11 @@ int main()
 	std::string text;
 	std::getline(std::cin, text);
 
-	const char* _text = text.c_str();
+	GetCharacterFrequency characterfrequency;
+	characterfrequency.main(text);
 
-	GetCharacterFrequency a;
-	a.main(text);
 	CreateTree();
-
-	for (int i = 0; i < text.size(); i++)
-	{
-		GetNewCodes(nodes.top(), (const char*)_text[i]);
-	}
-
-	//HuffmanCodes(text.c_str());
+	GetNewCodes(text);
 
 	std::cin.ignore();
-	
-	//ooouuuuaaaaaaaaaaiiiiiiiiiiiisssssssssssss
 }
