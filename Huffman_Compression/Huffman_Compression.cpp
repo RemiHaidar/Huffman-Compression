@@ -7,7 +7,9 @@
 #include <fstream>
 
 // Strings are used instead of chars so the letters can be found in the
-// Huffman tree in a more efficient way
+// Huffman tree in a more efficient way (see further in code).
+
+std::fstream file;
 
 std::vector<std::pair<std::string, int>> characterFrequency;
 
@@ -119,7 +121,7 @@ void HuffmanCode(Node* root, std::string character)
 				temp = root->left->letter[j];
 				if (temp == character)
 				{
-					code = code + "0";
+					code += "0";
 					HuffmanCode(root->left, character);
 				}
 			}
@@ -130,7 +132,7 @@ void HuffmanCode(Node* root, std::string character)
 				temp = root->right->letter[j];
 				if (temp == character)
 				{
-					code = code + "1";
+					code += "1";
 					HuffmanCode(root->right, character);
 				}
 			}
