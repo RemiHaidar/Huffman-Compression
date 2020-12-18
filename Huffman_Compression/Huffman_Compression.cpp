@@ -141,9 +141,13 @@ void HuffmanCode(Node* root, std::string character)
 }
 
 // Main function
-void GetNewCodes(std::string text)
+void GetHuffmanCodes(std::string text)
 {
 	std::string temp;
+
+	GetCharacterFrequency characterfrequency;
+	characterfrequency.main(text);
+	CreateTree();
 	for (int i = 0; text[i] != '\0'; i++)
 	{
 		temp = text[i];
@@ -157,11 +161,7 @@ int main()
 	std::string text;
 	std::getline(std::cin, text);
 
-	GetCharacterFrequency characterfrequency;
-	characterfrequency.main(text);
-
-	CreateTree();
-	GetNewCodes(text);
+	GetHuffmanCodes(text);
 
 	std::cin.ignore();
 }
