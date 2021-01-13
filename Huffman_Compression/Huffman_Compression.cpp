@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <queue>
-#include <fstream>
 
 // Strings are used instead of chars so the letters can be found in the
 // Huffman tree in a more efficient way (see further in code).
