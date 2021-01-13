@@ -9,8 +9,6 @@
 // Strings are used instead of chars so the letters can be found in the
 // Huffman tree in a more efficient way (see further in code).
 
-std::fstream file;
-
 std::vector<std::pair<std::string, int>> characterFrequency;
 
 struct GetCharacterFrequency
@@ -97,21 +95,35 @@ void CreateTree()
 	}
 }
 
+// Check if letter was already encoded
+bool LetterFound(std::vector<std::pair<std::string, std::string>> a, std::string b)
+{
+	for (auto i : a)
+	{
+		if (i.first == b)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// Stores codes
+std::vector<std::pair<std::string, std::string>> codes;
+
 // Function that displays code of letter given in as a parameter
 void HuffmanCode(Node* root, std::string character)
 {
-	static std::vector<std::string> codes;
 	static std::string code = "";
 	std::string temp;
 
 	// Check if letter is already found
-	if (!std::count(codes.begin(), codes.end(), character))
+	if (!LetterFound(codes, character))
 	{
 		// If nodes contains letter, display code
 		if (root->letter == character)
 		{
-			std::cout << character << " : " << code << std::endl;
-			codes.push_back(character);
+			codes.push_back(std::make_pair(character, code));
 		}
 		else
 		{
@@ -149,11 +161,38 @@ void GetHuffmanCodes(std::string text)
 
 	GetCharacterFrequency characterfrequency;
 	characterfrequency.main(text);
+
 	CreateTree();
+
+	// Get huffman code of each letter
 	for (int i = 0; text[i] != '\0'; i++)
 	{
 		temp = text[i];
 		HuffmanCode(nodes.top(), temp);
+	}
+
+	std::cout << "[CODES] :" << std::endl;
+
+	// Display letters and their equivalent codes
+	for (auto i : codes)
+	{
+		std::cout << i.first << " : " << i.second << std::endl;
+	}
+}
+
+void DisplayCompressedText(std::vector<std::pair<std::string, std::string>> a, std::string b)
+{
+	std::cout << "[COMPRESSED TEXT] :" << std::endl;
+
+	std::string temp;
+	for (int i = 0; b[i] != '\0'; i++)
+	{
+		temp = b[i];
+		for (auto j : codes)
+		{
+			if (j.first == temp)
+				std::cout << j.second;
+		}
 	}
 }
 
@@ -164,6 +203,8 @@ int main()
 	std::getline(std::cin, text);
 
 	GetHuffmanCodes(text);
+
+	DisplayCompressedText(codes, text);
 
 	std::cin.ignore();
 }
