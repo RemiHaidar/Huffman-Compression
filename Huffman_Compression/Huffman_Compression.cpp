@@ -10,37 +10,32 @@
 
 std::vector<std::pair<std::string, int>> characterFrequency;
 
-struct GetCharacterFrequency
+// Checks if letter is already found in vector
+bool LetterIsFound(std::vector<std::pair<std::string, int>> x, std::string y)
 {
-private:
-	// Checks if letter is already found in vector
-	bool LetterIsFound(std::vector<std::pair<std::string, int>> x, std::string y)
+	for (auto i : x) {
+		if (i.first == y) { return true; }
+	}	return false;
+}
+// Adds to character frequency if letter is already found
+void AddToCharacterFrequency(std::string a)
+{
+	for (auto& i : characterFrequency)
 	{
-		for (auto i : x) {
-			if (i.first == y) { return true; }
-		}	return false;
+		if (i.first == a) { i.second++; }
 	}
-	// Adds to character frequency if letter is already found
-	void AddToCharacterFrequency(std::string a)
+}
+void GetFrequencies(std::string word)
+{
+	std::string temp;
+	// Find characters and their frequencies
+	for (int i = 0; word[i] != '\0'; i++)
 	{
-		for (auto& i : characterFrequency)
-		{
-			if (i.first == a) { i.second++; }
-		}
+		temp = word[i];
+		if (LetterIsFound(characterFrequency, temp)) { AddToCharacterFrequency(temp); }
+		else { characterFrequency.push_back(std::make_pair(temp, 1)); }
 	}
-public:
-	void main(std::string word)
-	{
-		std::string temp;
-		// Find characters and their frequencies
-		for (int i = 0; word[i] != '\0'; i++)
-		{
-			temp = word[i];
-			if (LetterIsFound(characterFrequency, temp)) { AddToCharacterFrequency(temp); }
-			else { characterFrequency.push_back(std::make_pair(temp, 1)); }
-		}
-	}
-};
+}
 
 // Node object
 struct Node
@@ -110,7 +105,7 @@ bool LetterFound(std::vector<std::pair<std::string, std::string>> a, std::string
 // Stores codes
 std::vector<std::pair<std::string, std::string>> codes;
 
-// Function that displays code of letter given in as a parameter
+// Stores huffman codes in vector
 void HuffmanCode(Node* root, std::string character)
 {
 	static std::string code = "";
@@ -158,9 +153,7 @@ void GetHuffmanCodes(std::string text)
 {
 	std::string temp;
 
-	GetCharacterFrequency characterfrequency;
-	characterfrequency.main(text);
-
+	GetFrequencies(text);
 	CreateTree();
 
 	// Get huffman code of each letter
@@ -177,16 +170,13 @@ void GetHuffmanCodes(std::string text)
 	{
 		std::cout << i.first << " : " << i.second << std::endl;
 	}
-}
 
-void DisplayCompressedText(std::vector<std::pair<std::string, std::string>> a, std::string b)
-{
 	std::cout << "[COMPRESSED TEXT] :" << std::endl;
 
-	std::string temp;
-	for (int i = 0; b[i] != '\0'; i++)
+	// Displays compressed text
+	for (int i = 0; text[i] != '\0'; i++)
 	{
-		temp = b[i];
+		temp = text[i];
 		for (auto j : codes)
 		{
 			if (j.first == temp)
@@ -195,15 +185,12 @@ void DisplayCompressedText(std::vector<std::pair<std::string, std::string>> a, s
 	}
 }
 
-
 int main()
 {
 	std::string text;
 	std::getline(std::cin, text);
 
 	GetHuffmanCodes(text);
-
-	DisplayCompressedText(codes, text);
 
 	std::cin.ignore();
 }
