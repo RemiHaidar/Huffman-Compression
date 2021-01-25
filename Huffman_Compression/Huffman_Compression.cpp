@@ -105,13 +105,27 @@ bool LetterFound(std::vector<std::pair<std::string, std::string>> a, std::string
 // Stores codes
 std::vector<std::pair<std::string, std::string>> codes;
 
+// Checks if left node contains letter
+bool LetterInLeftNode(Node* root, std::string c)
+{
+	std::string t;
+	for (int i = 0; i < root->left->letter.size(); i++)
+	{
+		t = root->left->letter[j];
+		if (temp == character)
+			return true;
+	}
+	return false;
+
+}
+
 // Stores huffman codes in vector
-void HuffmanCode(Node* root, std::string character)
+void GetCodes(Node* root, std::string character)
 {
 	static std::string code = "";
 	std::string temp;
 
-	// Check if letter is already found
+	// Checks if letter is already found
 	if (!LetterFound(codes, character))
 	{
 		// If nodes contains letter, display code
@@ -121,26 +135,16 @@ void HuffmanCode(Node* root, std::string character)
 		}
 		else
 		{
-			// Check the left node
-			for (int j = 0; j < root->left->letter.size(); j++)
+			// Checks the left node
+			if (LetterInLeftNode())
 			{
-				temp = root->left->letter[j];
-				if (temp == character)
-				{
-					code += "0";
-					HuffmanCode(root->left, character);
-				}
+				code += "0";
+				GetCodes(root->left, character);
 			}
-
-			// Check the right node
-			for (int j = 0; root->right->letter[j] != '\0'; j++)
-			{
-				temp = root->right->letter[j];
-				if (temp == character)
-				{
-					code += "1";
-					HuffmanCode(root->right, character);
-				}
+			// Checks the right node
+			else{
+				code += "1";
+				GetCodes(root->right, character);
 			}
 		}
 	}
@@ -149,7 +153,7 @@ void HuffmanCode(Node* root, std::string character)
 }
 
 // Main function
-void GetHuffmanCodes(std::string text)
+void DisplayCodes(std::string text)
 {
 	std::string temp;
 
@@ -160,16 +164,14 @@ void GetHuffmanCodes(std::string text)
 	for (int i = 0; text[i] != '\0'; i++)
 	{
 		temp = text[i];
-		HuffmanCode(nodes.top(), temp);
+		GetCodes(nodes.top(), temp);
 	}
 
 	std::cout << "[CODES] :" << std::endl;
 
 	// Display letters and their equivalent codes
 	for (auto i : codes)
-	{
 		std::cout << i.first << " : " << i.second << std::endl;
-	}
 
 	std::cout << "[COMPRESSED TEXT] :" << std::endl;
 
@@ -190,7 +192,7 @@ int main()
 	std::string text;
 	std::getline(std::cin, text);
 
-	GetHuffmanCodes(text);
+	DisplayCodes(text);
 
 	std::cin.ignore();
 }
