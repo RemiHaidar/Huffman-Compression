@@ -111,8 +111,8 @@ bool LetterInLeftNode(Node* root, std::string c)
 	std::string t;
 	for (int i = 0; i < root->left->letter.size(); i++)
 	{
-		t = root->left->letter[j];
-		if (temp == character)
+		t = root->left->letter[i];
+		if (t == c)
 			return true;
 	}
 	return false;
@@ -136,7 +136,7 @@ void GetCodes(Node* root, std::string character)
 		else
 		{
 			// Checks the left node
-			if (LetterInLeftNode())
+			if (LetterInLeftNode(root,character))
 			{
 				code += "0";
 				GetCodes(root->left, character);
