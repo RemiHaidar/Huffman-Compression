@@ -141,7 +141,7 @@ void GetCodes(Node* root, std::string character)
 				code += "0";
 				GetCodes(root->left, character);
 			}
-			// Checks the right node
+			// If not, it's in the right node
 			else{
 				code += "1";
 				GetCodes(root->right, character);
@@ -157,6 +157,7 @@ void DisplayCodes(std::string text)
 {
 	std::string temp;
 
+	// Gets frequencies and builds the tree
 	GetFrequencies(text);
 	CreateTree();
 
